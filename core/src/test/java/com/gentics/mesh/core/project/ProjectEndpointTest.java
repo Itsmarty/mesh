@@ -72,7 +72,6 @@ import com.gentics.mesh.parameter.impl.NodeParametersImpl;
 import com.gentics.mesh.parameter.impl.PagingParametersImpl;
 import com.gentics.mesh.parameter.impl.RolePermissionParametersImpl;
 import com.gentics.mesh.parameter.impl.VersioningParametersImpl;
-import com.gentics.mesh.rest.client.MeshResponse;
 import com.gentics.mesh.router.RouterStorage;
 import com.gentics.mesh.test.context.AbstractMeshTest;
 import com.gentics.mesh.test.context.MeshTestSetting;
@@ -707,12 +706,12 @@ public class ProjectEndpointTest extends AbstractMeshTest implements BasicRestTe
 		long nProjectsBefore = meshRoot().getProjectRoot().computeCount();
 
 
-		validateCreation(i -> {
+		validateCreation(nJobs, i -> {
 			ProjectCreateRequest request = new ProjectCreateRequest();
 			request.setName("test12345_" + i);
 			request.setSchema(new SchemaReferenceImpl().setName("folder"));
 			return client().createProject(request);
-		}, nJobs);
+		});
 
 		try (Tx tx = tx()) {
 			long n = StreamSupport.stream(tx.getGraph().getVertices(PolymorphicTypeResolver.TYPE_RESOLUTION_KEY, ProjectImpl.class.getName())
